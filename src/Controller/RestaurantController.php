@@ -20,6 +20,7 @@ class RestaurantController extends FOSRestController implements ClassResourceInt
     public function __construct(RestaurantRepository $repository)
     {
         $this->repository = $repository;
+        header("Access-Control-Allow-Origin: *");
     }
 
     /**

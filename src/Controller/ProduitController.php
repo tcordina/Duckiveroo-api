@@ -20,6 +20,7 @@ class ProduitController extends FOSRestController implements ClassResourceInterf
     public function __construct(ProduitRepository $repository)
     {
         $this->repository = $repository;
+        header("Access-Control-Allow-Origin: *");
     }
 
     /**

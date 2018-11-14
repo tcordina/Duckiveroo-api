@@ -20,6 +20,7 @@ class CategorieController extends FOSRestController implements ClassResourceInte
     public function __construct(CategorieRepository $repository)
     {
         $this->repository = $repository;
+        header("Access-Control-Allow-Origin: *");
     }
 
     /**
