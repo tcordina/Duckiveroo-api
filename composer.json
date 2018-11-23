@@ -20,7 +20,8 @@
         "symfony/serializer-pack": "*",
         "symfony/validator": "*",
         "symfony/web-link": "*",
-        "symfony/yaml": "*"
+        "symfony/yaml": "*",
+        "twig/twig": "^2.0"
     },
     "require-dev": {
         "symfony/debug-pack": "*",

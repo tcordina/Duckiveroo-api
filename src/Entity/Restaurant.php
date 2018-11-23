@@ -49,6 +49,26 @@ class Restaurant
     private $generalcost;
 
     /**
+     * @ORM\Column(type="float", length=10)
+     */
+    private $likes;
+
+    /**
+     * @ORM\Column(type="float", length=10)
+     */
+    private $prixLivraison;
+
+    /**
+     * @ORM\Column(type="float", length=10)
+     */
+    private $minOrder;
+
+    /**
+     * @ORM\Column(type="time", length=20)
+     */
+    private $tempsPrep;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Produit", mappedBy="restaurant")
      */
     private $produits;
@@ -211,6 +231,66 @@ class Restaurant
                 $produit->setRestaurant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLikes(): ?float
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(float $likes): self
+    {
+        $this->likes = $likes;
+
+        return $this;
+    }
+
+    public function getLivraison(): ?float
+    {
+        return $this->livraison;
+    }
+
+    public function setLivraison(float $livraison): self
+    {
+        $this->livraison = $livraison;
+
+        return $this;
+    }
+
+    public function getMinOrder(): ?float
+    {
+        return $this->minOrder;
+    }
+
+    public function setMinOrder(float $minOrder): self
+    {
+        $this->minOrder = $minOrder;
+
+        return $this;
+    }
+
+    public function getPrixLivraison(): ?float
+    {
+        return $this->prixLivraison;
+    }
+
+    public function setPrixLivraison(float $prixLivraison): self
+    {
+        $this->prixLivraison = $prixLivraison;
+
+        return $this;
+    }
+
+    public function getTempsPrep(): ?\DateTimeInterface
+    {
+        return $this->tempsPrep;
+    }
+
+    public function setTempsPrep(\DateTimeInterface $tempsPrep): self
+    {
+        $this->tempsPrep = $tempsPrep;
 
         return $this;
     }
