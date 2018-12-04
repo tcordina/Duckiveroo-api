@@ -31,16 +31,6 @@ class Produit
      */
     private $categorie;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Restaurant", inversedBy="produits")
-     */
-    private $restaurant;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $price;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -70,18 +60,6 @@ class Produit
         return $this;
     }
 
-    public function getPrice(): ?string
-    {
-        return $this->price;
-    }
-
-    public function setPrice(string $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
     public function getCategorie(): ?Categorie
     {
         return $this->categorie;
@@ -90,18 +68,6 @@ class Produit
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
-
-        return $this;
-    }
-
-    public function getRestaurant(): ?Restaurant
-    {
-        return $this->restaurant;
-    }
-
-    public function setRestaurant(?Restaurant $restaurant): self
-    {
-        $this->restaurant = $restaurant;
 
         return $this;
     }

@@ -69,168 +69,88 @@ class Restaurant
     private $tempsPrep;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Produit", mappedBy="restaurant")
+     * @ORM\OneToMany(targetEntity="App\Entity\Categorie", mappedBy="restaurant")
      */
-    private $produits;
+    private $categories;
 
     public function __construct()
     {
-        $this->produits = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     * @return Restaurant
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     * @return Restaurant
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getImage()
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    /**
-     * @param mixed $image
-     * @return Restaurant
-     */
-    public function setImage($image)
+    public function setImage(?string $image): self
     {
         $this->image = $image;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRating()
+    public function getRating(): ?string
     {
         return $this->rating;
     }
 
-    /**
-     * @param mixed $rating
-     * @return Restaurant
-     */
-    public function setRating($rating)
+    public function setRating(string $rating): self
     {
         $this->rating = $rating;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param mixed $type
-     * @return Restaurant
-     */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param mixed $description
-     * @return Restaurant
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getGeneralcost()
+    public function getGeneralcost(): ?string
     {
         return $this->generalcost;
     }
 
-    /**
-     * @param mixed $generalcost
-     * @return Restaurant
-     */
-    public function setGeneralcost($generalcost)
+    public function setGeneralcost(string $generalcost): self
     {
         $this->generalcost = $generalcost;
-        return $this;
-    }
-
-    /**
-     * @return Collection|Produit[]
-     */
-    public function getProduits(): Collection
-    {
-        return $this->produits;
-    }
-
-    public function addProduit(Produit $produit): self
-    {
-        if (!$this->produits->contains($produit)) {
-            $this->produits[] = $produit;
-            $produit->setRestaurant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduit(Produit $produit): self
-    {
-        if ($this->produits->contains($produit)) {
-            $this->produits->removeElement($produit);
-            // set the owning side to null (unless already changed)
-            if ($produit->getRestaurant() === $this) {
-                $produit->setRestaurant(null);
-            }
-        }
 
         return $this;
     }
@@ -247,14 +167,14 @@ class Restaurant
         return $this;
     }
 
-    public function getLivraison(): ?float
+    public function getPrixLivraison(): ?float
     {
-        return $this->livraison;
+        return $this->prixLivraison;
     }
 
-    public function setLivraison(float $livraison): self
+    public function setPrixLivraison(float $prixLivraison): self
     {
-        $this->livraison = $livraison;
+        $this->prixLivraison = $prixLivraison;
 
         return $this;
     }
@@ -271,28 +191,46 @@ class Restaurant
         return $this;
     }
 
-    public function getPrixLivraison(): ?float
-    {
-        return $this->prixLivraison;
-    }
-
-    public function setPrixLivraison(float $prixLivraison): self
-    {
-        $this->prixLivraison = $prixLivraison;
-
-        return $this;
-    }
-
-    public function getTempsPrep(): ?\DateTimeInterface
+    public function getTempsPrep(): ?int
     {
         return $this->tempsPrep;
     }
 
-    public function setTempsPrep(\DateTimeInterface $tempsPrep): self
+    public function setTempsPrep(int $tempsPrep): self
     {
         $this->tempsPrep = $tempsPrep;
 
         return $this;
     }
 
+    /**
+     * @return Collection|Categorie[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Categorie $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+            $category->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Categorie $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            // set the owning side to null (unless already changed)
+            if ($category->getRestaurant() === $this) {
+                $category->setRestaurant(null);
+            }
+        }
+
+        return $this;
+    }
 }

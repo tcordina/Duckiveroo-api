@@ -28,6 +28,11 @@ class Categorie
      */
     private $produits;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Restaurant", inversedBy="categories")
+     */
+    private $restaurant;
+
     public function __construct()
     {
         $this->produits = new ArrayCollection();
@@ -77,6 +82,18 @@ class Categorie
                 $produit->setCategorie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): self
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }
