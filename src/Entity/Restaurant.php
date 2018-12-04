@@ -64,7 +64,7 @@ class Restaurant
     private $minOrder;
 
     /**
-     * @ORM\Column(type="time", length=20)
+     * @ORM\Column(type="integer", length=20)
      */
     private $tempsPrep;
 

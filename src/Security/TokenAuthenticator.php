@@ -29,7 +29,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return true;
+        return null !== $request->query->get('token');
     }
 
     /**
