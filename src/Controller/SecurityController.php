@@ -17,54 +17,70 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 class SecurityController extends AbstractController
 {
     private $repository;
+    private $encoder;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepository $repository, UserPasswordEncoderInterface $encoder)
     {
         $this->repository = $repository;
+        $this->encoder = $encoder;
         header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: X-Requested-With, Content-Type");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     }
 
     /**
      * @Rest\Route("/login", name="security_login", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
      */
-    public function login(Request $request, PasswordEncoderInterface $encoder): Response
+    public function login(Request $request)
     {
+        if ($request->isMethod('OPTIONS')) {
+            return new Response('ok');
+        }
         $email = $request->request->get('_email');
         $password = $request->request->get('_password');
         $user = $this->repository->findOneBy(['email' => $email]);
         if ($user instanceof UserInterface) {
-            if ($encoder->isPasswordValid($user->getPassword(), $password, null)) {
+            if ($this->encoder->isPasswordValid($user, $password)) {
                 $user = [
                     'email' => $user->getEmail(),
+                    'nom' => $user->getNom(),
+                    'prenom' => $user->getPrenom(),
+                    'apikey' => $user->getApiKey(),
                 ];
                 return (new JsonResponse($user))->setEncodingOptions(JSON_FORCE_OBJECT);
             }
         }
-        return new JsonResponse(false);
+        return new JsonResponse('wrong credentials');
     }
 
     /**
-     * @Rest\Route("/register", name="security_register", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
+     * @Rest\Route("/register", name="security_register", methods={Request::METHOD_POST,Request::METHOD_OPTIONS,Request::METHOD_GET})
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder)
+    public function register(Request $request)
     {
-        $user = new User();
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
-        $nom = $request->request->get('nom');
-        $prenom = $request->request->get('prenom');
-        $encodedPassword = $encoder->encodePassword($user, $password);
-        $user->setEmail($email)
-            ->setNom($nom)
-            ->setPrenom($prenom)
-            ->setPassword($encodedPassword);
-        $em = $this->getDoctrine()->getManager();
-        try {
-            $em->persist($user);
-            $em->flush();
-            return new JsonResponse(true);
-        } catch (DBALException $e) {
-            return new JsonResponse($e);
+        if ($request->isMethod('OPTIONS')) {
+            return new Response('ok');
+        }
+        if ($request->isMethod('POST')) {
+            $user = new User();
+            $email = $request->request->get('email');
+            $password = $request->request->get('password');
+            $nom = $request->request->get('nom');
+            $prenom = $request->request->get('prenom');
+            $encodedPassword = $this->encoder->encodePassword($user, $password);
+            $user->setEmail($email)
+                ->setNom($nom)
+                ->setPrenom($prenom)
+                ->setApiKey('testkey')
+                ->setPassword($encodedPassword);
+            $em = $this->getDoctrine()->getManager();
+            try {
+                $em->persist($user);
+                $em->flush();
+                return new JsonResponse(true);
+            } catch (DBALException $e) {
+                return new JsonResponse($e);
+            }
         }
     }
 }

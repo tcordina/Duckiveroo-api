@@ -39,8 +39,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return 'security_login' === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        return false;/*'security_login' === $request->attributes->get('_route') && $request->isMethod('GET');*/
     }
 
     public function getCredentials(Request $request)
