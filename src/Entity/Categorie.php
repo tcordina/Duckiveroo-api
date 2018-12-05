@@ -29,13 +29,14 @@ class Categorie
     private $produits;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Restaurant", inversedBy="categories")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Restaurant", inversedBy="categories")
      */
     private $restaurant;
 
     public function __construct()
     {
         $this->produits = new ArrayCollection();
+        $this->restaurant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,15 +87,30 @@ class Categorie
         return $this;
     }
 
-    public function getRestaurant(): ?Restaurant
+    /**
+     * @return Collection|Restaurant[]
+     */
+    public function getRestaurant(): Collection
     {
         return $this->restaurant;
     }
 
-    public function setRestaurant(?Restaurant $restaurant): self
+    public function addRestaurant(Restaurant $restaurant): self
     {
-        $this->restaurant = $restaurant;
+        if (!$this->restaurant->contains($restaurant)) {
+            $this->restaurant[] = $restaurant;
+        }
 
         return $this;
     }
+
+    public function removeRestaurant(Restaurant $restaurant): self
+    {
+        if ($this->restaurant->contains($restaurant)) {
+            $this->restaurant->removeElement($restaurant);
+        }
+
+        return $this;
+    }
+
 }

@@ -29,7 +29,7 @@ class Restaurant
     private $image;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float")
      */
     private $rating;
 
@@ -44,7 +44,7 @@ class Restaurant
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="smallint")
      */
     private $generalcost;
 
@@ -69,7 +69,7 @@ class Restaurant
     private $tempsPrep;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Categorie", mappedBy="restaurant")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Categorie", mappedBy="restaurant")
      */
     private $categories;
 
@@ -107,12 +107,12 @@ class Restaurant
         return $this;
     }
 
-    public function getRating(): ?string
+    public function getRating(): ?float
     {
         return $this->rating;
     }
 
-    public function setRating(string $rating): self
+    public function setRating(float $rating): self
     {
         $this->rating = $rating;
 
@@ -143,12 +143,12 @@ class Restaurant
         return $this;
     }
 
-    public function getGeneralcost(): ?string
+    public function getGeneralcost(): ?int
     {
         return $this->generalcost;
     }
 
-    public function setGeneralcost(string $generalcost): self
+    public function setGeneralcost(int $generalcost): self
     {
         $this->generalcost = $generalcost;
 
@@ -215,7 +215,7 @@ class Restaurant
     {
         if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
-            $category->setRestaurant($this);
+            $category->addRestaurant($this);
         }
 
         return $this;
@@ -225,10 +225,7 @@ class Restaurant
     {
         if ($this->categories->contains($category)) {
             $this->categories->removeElement($category);
-            // set the owning side to null (unless already changed)
-            if ($category->getRestaurant() === $this) {
-                $category->setRestaurant(null);
-            }
+            $category->removeRestaurant($this);
         }
 
         return $this;
