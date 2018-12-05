@@ -9,11 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 class SecurityController extends AbstractController
 {
@@ -26,7 +25,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="security_login", methods="POST")
+     * @Rest\Route("/login", name="security_login", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
      */
     public function login(Request $request, PasswordEncoderInterface $encoder): Response
     {
@@ -45,7 +44,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/register", name="security_register", methods="POST")
+     * @Rest\Route("/register", name="security_register", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
      */
     public function register(Request $request, UserPasswordEncoderInterface $encoder)
     {
