@@ -21,7 +21,8 @@
         "symfony/validator": "*",
         "symfony/web-link": "*",
         "symfony/yaml": "*",
-        "twig/twig": "^2.0"
+        "twig/twig": "^2.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
