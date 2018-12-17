@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -41,13 +40,14 @@ class SecurityController extends AbstractController
         $user = $this->repository->findOneBy(['email' => $email]);
         if ($user instanceof UserInterface) {
             if ($this->encoder->isPasswordValid($user, $password)) {
-                $user = [
+                /*$user = [
                     'email' => $user->getEmail(),
                     'nom' => $user->getNom(),
                     'prenom' => $user->getPrenom(),
                     'apikey' => $user->getApiKey(),
-                ];
-                return (new JsonResponse($user))->setEncodingOptions(JSON_FORCE_OBJECT);
+                ];*/
+                $apiKey = (string)$user->getApiKey();
+                return new JsonResponse($apiKey);
             }
         }
         return new JsonResponse('wrong credentials');

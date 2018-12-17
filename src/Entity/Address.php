@@ -42,7 +42,8 @@ class Address
     private $pays;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="adresse")
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="adresse")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
@@ -68,7 +69,7 @@ class Address
         return $this->batiment;
     }
 
-    public function setBatiment(string $batiment): self
+    public function setBatiment(?string $batiment): self
     {
         $this->batiment = $batiment;
 
@@ -120,12 +121,8 @@ class Address
     {
         $this->user = $user;
 
-        // set (or unset) the owning side of the relation if necessary
-        $newAdresse = $user === null ? null : $this;
-        if ($newAdresse !== $user->getAdresse()) {
-            $user->setAdresse($newAdresse);
-        }
-
         return $this;
     }
+
+
 }

@@ -38,10 +38,14 @@ class User implements UserInterface
     private $prenom;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Address", inversedBy="user")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\Address", mappedBy="user")
      */
     private $adresse;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Cart", mappedBy="user")
+     */
+    private $cart;
 
     /**
      * @ORM\Column(type="array")
@@ -176,6 +180,24 @@ class User implements UserInterface
     public function setAdresse(?Address $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUser = $cart === null ? null : $this;
+        if ($newUser !== $cart->getUser()) {
+            $cart->setUser($newUser);
+        }
 
         return $this;
     }
