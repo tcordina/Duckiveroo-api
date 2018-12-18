@@ -36,7 +36,7 @@ class UserController extends FOSRestController implements ClassResourceInterface
     /**
      * Retrieves a Produit resource
      * @Rest\View()
-     * @Rest\Post("/user/update")
+     * @Rest\Route("/user/update", name="user_update", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
      */
     public function updateTheUser(Request $request)
     {

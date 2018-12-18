@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\CartProduit;
 use App\Entity\Produit;
 use App\Entity\User;
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,9 +22,7 @@ class CartController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * Retrieves a Produit resource
-     * @Rest\View()
-     * @Rest\Post("/cart/add/{produitId}")
+     * @Rest\Route("/cart/add/{produitid}", name="cart_add", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
      */
     public function addToCart(Request $request, int $produitId)
     {
@@ -34,7 +34,7 @@ class CartController extends FOSRestController implements ClassResourceInterface
         $user = $em->getRepository(User::class)->findOneBy(['apiKey' => $apiKey]);
         $cart = $user->getCart();
         $produit = $em->getRepository(Produit::class)->find($produitId);
-        $cartProduit = $em->getRepository(CartProduit::class)->findOneBy(['produit' => $produit]);
+        $cartProduit = $em->getRepository(CartProduit::class)->findOneBy(['cart' => $cart, 'produit' => $produit]);
         if ($cartProduit instanceof CartProduit) {
             $counter = $cartProduit->getCount();
             $cartProduit->setCount($counter + 1);
@@ -47,14 +47,17 @@ class CartController extends FOSRestController implements ClassResourceInterface
                 ->setCount(1);
             $em->persist($cartProduit);
         }
-        $em->flush();
-        return View::create($cart, Response::HTTP_OK)->setFormat('json');
+        try {
+            $em->flush();
+            return new JsonResponse(true);
+        } catch (DBALException $e) {
+            return new JsonResponse($e);
+        }
     }
 
     /**
      * Retrieves a Produit resource
-     * @Rest\View()
-     * @Rest\Post("/cart/remove/{produitId}")
+     * @Rest\Route("/cart/remove/{produitid}", name="cart_remove", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
      */
     public function removeFromCart(Request $request, int $produitId)
     {
@@ -66,7 +69,7 @@ class CartController extends FOSRestController implements ClassResourceInterface
         $user = $em->getRepository(User::class)->findOneBy(['apiKey' => $apiKey]);
         $cart = $user->getCart();
         $produit = $em->getRepository(Produit::class)->find($produitId);
-        $cartProduit = $em->getRepository(CartProduit::class)->findOneBy(['produit' => $produit]);
+        $cartProduit = $em->getRepository(CartProduit::class)->findOneBy(['cart' => $cart, 'produit' => $produit]);
         if ($cartProduit instanceof CartProduit) {
             $counter = $cartProduit->getCount();
             if ($counter > 1) {
@@ -76,7 +79,11 @@ class CartController extends FOSRestController implements ClassResourceInterface
                 $em->remove($cartProduit);
             }
         }
-        $em->flush();
-        return View::create($cart, Response::HTTP_OK)->setFormat('json');
+        try {
+            $em->flush();
+            return new JsonResponse(true);
+        } catch (DBALException $e) {
+            return new JsonResponse($e);
+        }
     }
 }
