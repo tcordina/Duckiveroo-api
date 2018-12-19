@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Cart;
 use App\Entity\CartProduit;
 use App\Entity\Produit;
 use App\Entity\User;
@@ -22,7 +23,7 @@ class CartController extends FOSRestController implements ClassResourceInterface
     }
 
     /**
-     * @Rest\Route("/cart/add/{produitid}", name="cart_add", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
+     * @Rest\Route("/cart/add/{produitId}", name="cart_add", methods={Request::METHOD_POST,Request::METHOD_OPTIONS,Request::METHOD_GET})
      */
     public function addToCart(Request $request, int $produitId)
     {
@@ -33,6 +34,11 @@ class CartController extends FOSRestController implements ClassResourceInterface
         $apiKey = $request->query->get('token');
         $user = $em->getRepository(User::class)->findOneBy(['apiKey' => $apiKey]);
         $cart = $user->getCart();
+        if ($cart === null) {
+            $cart = new Cart();
+            $user->setCart($cart);
+            $em->persist($cart);
+        }
         $produit = $em->getRepository(Produit::class)->find($produitId);
         $cartProduit = $em->getRepository(CartProduit::class)->findOneBy(['cart' => $cart, 'produit' => $produit]);
         if ($cartProduit instanceof CartProduit) {
@@ -57,7 +63,7 @@ class CartController extends FOSRestController implements ClassResourceInterface
 
     /**
      * Retrieves a Produit resource
-     * @Rest\Route("/cart/remove/{produitid}", name="cart_remove", methods={Request::METHOD_POST,Request::METHOD_OPTIONS})
+     * @Rest\Route("/cart/remove/{produitId}", name="cart_remove", methods={Request::METHOD_POST,Request::METHOD_OPTIONS,Request::METHOD_GET})
      */
     public function removeFromCart(Request $request, int $produitId)
     {
@@ -78,6 +84,8 @@ class CartController extends FOSRestController implements ClassResourceInterface
             } else {
                 $em->remove($cartProduit);
             }
+        } else {
+            return new JsonResponse(false);
         }
         try {
             $em->flush();
