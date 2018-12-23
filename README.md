@@ -1,2 +1,2 @@
 # Duckiveroo-api
-Project using this api : [https://github.com/kaelgh](https://github.com/kaelgh)
+Project using this api : [https://github.com/KaelGH/Duckiveroo](https://github.com/KaelGH/Duckiveroo)
