@@ -68,10 +68,11 @@ class SecurityController extends AbstractController
             $nom = $request->request->get('nom');
             $prenom = $request->request->get('prenom');
             $encodedPassword = $this->encoder->encodePassword($user, $password);
+            $key = $this->generateKey(6);
             $user->setEmail($email)
                 ->setNom($nom)
                 ->setPrenom($prenom)
-                ->setApiKey('testkey')
+                ->setApiKey($key)
                 ->setPassword($encodedPassword);
             $em = $this->getDoctrine()->getManager();
             try {
@@ -82,5 +83,15 @@ class SecurityController extends AbstractController
                 return new JsonResponse($e);
             }
         }
+    }
+
+    private function generateKey($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }
